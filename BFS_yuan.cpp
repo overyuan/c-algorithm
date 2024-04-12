@@ -132,3 +132,61 @@ int main() {
     }
     return 0;
 }
+
+// example3 给出树的后序中序排列，输出其层序排列
+// 递归，BFS
+// in 7
+// 2 3 1 5 7 6 4
+// 1 2 3 4 5 6 7
+// out 4 1 6 3 5 7 2
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int n,backxu[35],midxu[35],pos[35],l[35],r[35];
+
+int build(int bl,int br,int ml,int mr,int level){
+    if(bl>br){
+        return 0;
+    }
+    int val=backxu[br];
+    
+    int k=pos[val];
+    l[val]=build(bl,k-ml+bl-1,ml,k-1,level+1);
+    r[val]=build(k-ml+bl,br-1,k+1,mr,level+1);
+    return val;
+}
+
+void bfs(){
+    queue<int> q;
+    q.push(backxu[n-1]);
+    while(!q.empty()){
+        int temp=q.front();
+        q.pop();
+        cout<<temp<<" ";
+        if(l[temp]!=0){
+            q.push(l[temp]);
+        }
+        if(r[temp]!=0){
+            q.push(r[temp]);
+        }
+    }
+    
+}
+
+int main(){
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>backxu[i];
+    }
+    for(int i=0;i<n;i++){
+        cin>>midxu[i];
+    }
+    for(int i=0;i<n;i++){
+        pos[midxu[i]]=i;
+    }
+    build(0,n-1,0,n-1,0);
+    bfs();
+    return 0;
+}
