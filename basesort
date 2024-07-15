@@ -1,0 +1,84 @@
+基数排序
+#基数排序 #排序 #数据结构
+期末考试看到这个都懵了，特此学习一下。
+## 一、桶排序
+桶排序又称箱排序，采用分治思想，将待排序列分到若干个桶中，再对每个桶内的元素进行排序。桶排序是一种用空间换时间的排序，不需要关键字比较。
+![[Pasted image 20240715102402.png]]
+基数排序是桶排序的推广。 
+二、基数排序
+-基数排序是桶排序的推广。
+-**原理**是将待比较元素的关键字**按位切割**，再按每个位数分别比较。
+-**排序方式**有**主位优先法LSD**和**次位优先法MSD**。
+Most Significant Digit first and Least Significant Digit first.
+--MSD：先从高位开始，在每个关键字上采用计数排序，相当于“分治法” 。
+-- <font color="#ff0000">LSD</font>：先从低位开始，在每个关键字上采用桶排序，是种“分配-收集”法。
+==核心是通过分配不同的桶，将原来排序嵌套级别的步骤降为线性级别的==
+对于给定关键字排序，通常做法LSD：划分桶之后，从低位开始，先**分配**:对当前位数上数字为依据放进不同的桶，然后**收集**:将元素由桶从低到高收集。
+**eq1:**
+一个桶一个链表，尾插法分配，头指针搜集。
+-**时间复杂度**：**O(N×D)** N为待排序关键字个数，D为最高位位数。
+-**空间复杂度**：O(N),N为待排序元素（空间复杂度很高）
+-**稳定性**：稳定
+```cpp
+#include<iostream>
+using namespace std;
+int max(int date[],int n){//此函数用于求解所给数组中最大数有几位
+	int max=0;
+	for(int i=0;i<n;i++){
+		int count=1,tem=date[i];
+		while(tem/10!=0){//计算每个数的位数，用count计数
+			tem=tem/10;
+			count++;
+		}
+		if(count>max)
+			max=count;//把最大位数赋值max
+	}
+	return max;
+}
+void basesort(int date[],int n){
+	int maxx=max(date,n);//取得最大位数
+	int num=1;
+	for(int i=0;i<maxx;i++){//位数决定排序循环次数
+		int count[10];//声明count为了统计每个桶放了几个数
+		int temp[10]['n'];//temp相当于桶，前一个数标记第几个篮子，后一个为了标记放的个数
+		for(int f=0;f<10;f++){//对声明数组初始化
+			count[f]=0;
+		}
+		for(int g=0;g<10;g++){//对声明数组初始化
+			for(int z=0;z<n;z++){
+				temp[g][z]=0;
+			}
+		}
+		for(int j=0;j<n;j++){
+			int fg=date[j]/num;//num是变量，因为每次循环比较的位是不同的
+			int k=fg%10;
+			count[k]++;
+			int te=count[k]-1;
+			temp[k][te]=date[j];//把数据放k桶的te位上存储
+		}
+		int b=0;
+		for(int h=0;h<10;h++){
+			if(count[h]>0){//h>0说明h桶内有数字存储
+				for(int v=0;v<count[h];v++){//count[h]是h桶的存储个数
+					date[b]=temp[h][v];//把桶内排好的数全都倒给要排序的数组，进行下轮排序
+					b++;
+				}
+			}
+		}
+		num=num*10;
+	}
+}
+ 
+void print(int date[],int n){//打印排好序的数组
+	for(int i=0;i<10;i++){
+		cout<<date[i]<<" ";
+	}
+	cout<<endl;
+}
+int main(){
+	int date[10]={16,21,5,49,33,456,327,56,65,234};
+	basesort(date,10);
+	print(date,10);
+	return 0;
+}
+```
