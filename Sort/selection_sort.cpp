@@ -7,9 +7,11 @@ void SeletionSort(vector<int> &nums){
     //找到最小元素
     int k=i;
     for(int j=i+1;j<=n-1;j++){
-      if(nums[j]<nums[i]) k=j;
+      if(nums[j]<nums[k]) 
+        k=j;
     }
     swap(nums[k],nums[i]);//交换
   }
 }
 //Time Complexity:O(n^2);Space Complexity:O(1);unstable.
+//consider:why if change 'if(nums[j]<nums[k])' to 'if(nums[j]<nums[i])' will lead to wrong answer?
